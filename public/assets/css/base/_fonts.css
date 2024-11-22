@@ -1,0 +1,89 @@
+/* Uni Sans */
+@font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Thin Italic.otf') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Light Italic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Italic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans SemiBold Italic.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Bold Italic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Heavy.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Uni Sans';
+    src: url('/assets/fonts/UniSans/Uni Sans Heavy Italic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+  }
+  
+  :root {
+    --font-heading: 'Arial Rounded MT', sans-serif;
+    --font-body: 'Uni Sans', sans-serif;
+  }

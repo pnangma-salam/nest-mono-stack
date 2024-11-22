@@ -17,7 +17,3 @@ A lightweight, modern monolithic stack combining NestJS with HTMX and Alpine.js 
 - PostCSS (CSS Processing)
 - Tailwind CSS (Utility Classes)
 - Nunjucks (Templating)
-
-## Prerequisites
-- Node.js >= 18
-- npm >= 9

@@ -1,0 +1,41 @@
+/* This is an example of variables so that the can be used as tailwind colors or just css variables */
+:root {
+    --primary: hsl(var(--prefix-primary));
+    --secondary: hsl(var(--prefix-secondary));
+    --accent: hsl(var(--prefix-accent));
+    --background: hsl(var(--prefix-background));
+    --foreground: hsl(var(--prefix-foreground));
+    --muted: hsl(var(--prefix-muted));
+    --light-muted: hsl(var(--prefix-light-muted));
+    --corn: hsl(var(--prefix-corn));
+    --seal: hsl(var(--prefix-seal));
+    --ocean: hsl(var(--prefix-ocean));
+    --emphasis: hsl(var(--prefix-emphasis));
+    --destructive: hsl(var(--prefix-destructive));
+    --input: hsl(var(--prefix-input));
+    --ring: hsl(var(--prefix-ring));
+    --border: hsl(var(--prefix-border));
+    --angel: hsl(var(--prefix-angel));
+    --evil: hsl(var(--prefix-evil));
+    --shadow: var(--prefix-shadow);
+
+    --dgray500: hsl(var(--prefix-dgray500));
+    --dgray450: hsl(var(--prefix-dgray450));
+    
+    --radius-none: 0px;
+    --radius-sm: 5px;
+    --radius-md: 10px;
+    --radius-lg: 20px;
+
+    --fs-title: 48px;
+    --fs-subtitle: 36px;
+    --fs-body: 16px;
+
+    --breakpoint-mobile: 480px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-laptop: 1280px;
+    --breakpoint-desktop: 1440px;
+    --breakpoint-tv: 1920px;
+
+    --transition-duration: 0.3s;
+}

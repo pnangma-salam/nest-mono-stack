@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>{{ title }} | NestJS Mono Stack</title>
+    
+    {# Core styles #}
+    <link href="/assets/css/styles.min.css" rel="stylesheet">
+    
+    {# Core scripts : HTMX & Alpine.js #}
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    
+    {# Additional head content #}
+    {% block head %}{% endblock %}
+</head>
+<body class="tw-min-h-screen tw-bg-gray-50">
+    {# Header #}
+    {% include "partials/header.njk" %}
+    
+    {# Main content #}
+    <main class="tw-container tw-mx-auto tw-px-4 tw-py-8">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {# Footer #}
+    {% include "partials/footer.njk" %}
+    
+    {# Additional scripts #}
+    {% block scripts %}{% endblock %}
+</body>
+</html>
