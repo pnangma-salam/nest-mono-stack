@@ -1,9 +1,9 @@
 {
   "name": "nest-mono-stack",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
+  "description": "A lightweight, modern monolithic stack combining NestJS with HTMX and Alpine.js for server-first reactivity",
+  "author": "Abdou-Raouf ATARMLA <achilleatarmla@gmail.com>",
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
@@ -49,6 +49,25 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodesandbox/nest-mono-stack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodesandbox/nest-mono-stack/issues"
+  },
+  "homepage": "https://github.com/nodesandbox/nest-mono-stack#readme",
+  "keywords": [
+    "monolith",
+    "nestjs",
+    "htmx",
+    "alpinejs",
+    "tailwindcss",
+    "postcss",
+    "typescript",
+    "ssr",
+    "server-first"
+  ],
   "jest": {
     "moduleFileExtensions": [
       "js",
