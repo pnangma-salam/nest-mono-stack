@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import { createThemes } from 'tw-colors';
-import { themes } from './src/themes';
+import { themes } from './src/ui/themes';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 module.exports = {

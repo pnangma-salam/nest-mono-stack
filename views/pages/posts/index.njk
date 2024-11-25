@@ -1,0 +1,110 @@
+{# views/pages/posts/index.njk #}
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div x-data="postsManager({
+  initialFilters: {{ filters | json }},
+  currentPage: {{ page }},
+  totalPages: {{ totalPages }}
+})" class="tw-space-y-6">
+  
+  {# Filtres #}
+  <div class="tw-bg-white tw-shadow-sm tw-rounded-lg tw-p-4">
+    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4">
+      {# Recherche #}
+      <div>
+        <input
+          type="text"
+          x-model="filters.search"
+          @input="handleSearchInput"
+          placeholder="Rechercher..."
+          class="tw-w-full tw-px-3 tw-py-2 tw-border tw-rounded-md"
+        >
+      </div>
+
+      {# Tri #}
+      <div>
+        <select
+          x-model="filters.sortBy"
+          @change="handleFiltersChange"
+          class="tw-w-full tw-px-3 tw-py-2 tw-border tw-rounded-md"
+        >
+          <option value="id">Date (défaut)</option>
+          <option value="title">Titre</option>
+          <option value="user">Auteur</option>
+        </select>
+      </div>
+
+      {# Direction du tri #}
+      <div>
+        <button
+          @click="toggleSortOrder"
+          class="tw-w-full tw-px-3 tw-py-2 tw-border tw-rounded-md tw-flex tw-items-center tw-justify-center"
+          x-text="filters.sortOrder === 'asc' ? '↑ Ascendant' : '↓ Descendant'"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  {# Liste des posts #}
+  <div 
+    id="posts-list"
+    hx-get="/posts/list"
+    hx-trigger="filtersChanged from:body"
+    hx-push-url="true"
+    hx-include="[name='filters']"
+  >
+    {% include "pages/posts/_list.njk" %}
+  </div>
+
+  {# Indicateur de chargement #}
+  <div 
+    class="tw-fixed tw-bottom-4 tw-right-4 tw-bg-black tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
+    x-show="loading"
+    x-transition
+    style="display: none;"
+  >
+    Chargement...
+  </div>
+</div>
+
+<script>
+function postsManager(config) {
+  return {
+    filters: config.initialFilters,
+    loading: false,
+    debounceTimeout: null,
+
+    init() {
+      this.$watch('filters', () => this.handleFiltersChange());
+    },
+
+    handleSearchInput(e) {
+      clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        this.handleFiltersChange();
+      }, 300);
+    },
+
+    handleFiltersChange() {
+      this.updateURL();
+      this.$dispatch('filtersChanged');
+    },
+
+    toggleSortOrder() {
+      this.filters.sortOrder = this.filters.sortOrder === 'asc' ? 'desc' : 'asc';
+    },
+
+    updateURL() {
+      const params = new URLSearchParams();
+      Object.entries(this.filters).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+      });
+      
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  };
+}
+</script>
+{% endblock %}

@@ -11,7 +11,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const viewService = app.get(ViewService);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   viewService.setupViewEngine(app);
 

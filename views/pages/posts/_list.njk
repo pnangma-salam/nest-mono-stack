@@ -1,0 +1,39 @@
+<div class="tw-space-y-4">
+  {% for post in items %}
+  <article class="tw-bg-white tw-shadow-sm tw-rounded-lg tw-p-4">
+    <div class="tw-flex tw-justify-between tw-items-start">
+      <h2 class="tw-text-xl tw-font-semibold">{{ post.title }}</h2>
+      <span class="tw-text-sm tw-text-gray-500">Par {{ post.user.name }}</span>
+    </div>
+    <p class="tw-mt-2 tw-text-gray-600">{{ post.body }}</p>
+  </article>
+  {% endfor %}
+
+  {# Pagination #}
+  <div class="tw-flex tw-justify-between tw-items-center tw-mt-6">
+    <span>Page {{ page }} sur {{ totalPages }}</span>
+    <div class="tw-space-x-2">
+      {% if page > 1 %}
+      <button
+        class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
+        hx-get="/posts/list?page={{ page - 1 }}"
+        hx-target="#posts-list"
+        hx-push-url="true"
+      >
+        Précédent
+      </button>
+      {% endif %}
+      
+      {% if page < totalPages %}
+      <button
+        class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
+        hx-get="/posts/list?page={{ page + 1 }}"
+        hx-target="#posts-list"
+        hx-push-url="true"
+      >
+        Suivant
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</div>

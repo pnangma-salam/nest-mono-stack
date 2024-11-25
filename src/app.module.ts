@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HomeModule } from './features/home/home.module';
 import { ViewService } from './infrastructure/view/view.service';
 import { AppConfig, ViewConfig } from './config';
+import { PostsModule } from './features/posts/posts.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AppConfig, ViewConfig } from './config';
       load: [AppConfig, ViewConfig],
     }),
     HomeModule,
+    PostsModule,
   ],
   providers: [ViewService],
 })

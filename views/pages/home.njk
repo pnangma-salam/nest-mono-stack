@@ -1,75 +1,71 @@
 {% extends "layouts/base.njk" %}
 
 {% block content %}
-<div class="tw-max-w-4xl tw-mx-auto" x-data="{ showFeatures: false }">
-    <div class="tw-text-center tw-mb-12">
-        <h1 class="tw-text-4xl tw-font-bold tw-mb-4">{{ title }}</h1>
-        <p class="tw-text-xl tw-text-gray-600">{{ message }}</p>
+<div class="tw-max-w-4xl tw-mx-auto tw-space-y-12">
+
+  <!-- SECTION 1: Compteur Interactif avec Alpine.js -->
+  <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md" x-data="{ count: 0 }">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Compteur Interactif</h2>
+    <div class="tw-flex tw-items-center tw-gap-4">
+      <button 
+        class="tw-bg-red-500 tw-text-white tw-px-4 tw-py-2 tw-rounded"
+        x-on:click="count--">-</button>
+      <span class="tw-text-2xl" x-text="count">0</span>
+      <button 
+        class="tw-bg-green-500 tw-text-white tw-px-4 tw-py-2 tw-rounded"
+        x-on:click="count++">+</button>
     </div>
+  </div>
 
-    <div class="tw-grid tw-gap-6 tw-mb-12">
-        {# Interactive Counter with Alpine.js #}
-        <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md" x-data="{ count: 0 }">
-            <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Interactive Counter</h2>
-            <div class="tw-flex tw-items-center tw-gap-4">
-                <button 
-                    class="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded"
-                    x-on:click="count--"
-                >-</button>
-                <span class="tw-text-2xl" x-text="count">0</span>
-                <button 
-                    class="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded"
-                    x-on:click="count++"
-                >+</button>
-            </div>
-        </div>
-
-        {# Server Time with HTMX #}
-        <div 
-            class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md"
-            hx-get="/api/time"
-            hx-trigger="click"
-            hx-swap="innerHTML"
-        >
-            <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Server Time</h2>
-            <p>Current time: {{ currentTime }}</p>
-            <p class="tw-text-gray-600 tw-text-sm tw-mt-2">Click anywhere to update</p>
-        </div>
-
-        {# Feature List #}
-        <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md">
-            <h2 class="tw-text-xl tw-font-semibold tw-mb-4">
-                <button 
-                    class="tw-flex tw-items-center tw-gap-2"
-                    x-on:click="showFeatures = !showFeatures"
-                >
-                    <span>Features</span>
-                    <svg 
-                        class="tw-w-4 tw-h-4 tw-transition-transform"
-                        x-bind:class="{ 'tw-rotate-180': showFeatures }"
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                    >
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
-                    </svg>
-                </button>
-            </h2>
-            <ul 
-                class="tw-space-y-2"
-                x-show="showFeatures"
-                x-transition
-            >
-                {% for feature in features %}
-                <li class="tw-flex tw-items-center tw-gap-2">
-                    <svg class="tw-w-5 tw-h-5 tw-text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                    {{ feature }}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+  <!-- SECTION 2: Liste Interactive avec Recherche (HTMX) -->
+  <div>
+    <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md">
+      <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Liste avec Recherche</h2>
+      <form class="tw-mb-4" hx-get="/api/search" hx-target="#results">
+        <input 
+          type="text" 
+          name="query" 
+          placeholder="Recherche..." 
+          class="tw-border tw-px-4 tw-py-2 tw-rounded tw-w-full"
+          hx-trigger="keyup changed delay:500ms">
+      </form>
+      <div id="results">
+        <!-- Contenu initial chargé côté serveur -->
+        <ul class="tw-space-y-2">
+          {% for item in items %}
+          <li class="tw-bg-gray-100 tw-p-2 tw-rounded">{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
+  </div>
+
+  <!-- SECTION 3: Formulaire avec HTMX et Alpine.js -->
+  <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md" x-data="{ form: { name: '{{ user.name }}', email: '{{ user.email }}' } }">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Formulaire</h2>
+    <form hx-post="/api/save-user" hx-target="#form-response">
+      <label class="tw-block tw-mb-2">
+        Nom :
+        <input type="text" name="name" x-model="form.name" class="tw-border tw-px-4 tw-py-2 tw-rounded tw-w-full">
+      </label>
+      <label class="tw-block tw-mb-2">
+        Email :
+        <input type="email" name="email" x-model="form.email" class="tw-border tw-px-4 tw-py-2 tw-rounded tw-w-full">
+      </label>
+      <button type="submit" class="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded">Envoyer</button>
+    </form>
+    <div id="form-response" class="tw-mt-4 tw-text-green-500"></div>
+  </div>
+
+  <!-- SECTION 4: Données Dynamiques (HTMX) -->
+  <div 
+    class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-md"
+    hx-get="/api/time"
+    hx-trigger="load"
+    hx-swap="innerHTML">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Heure Dynamique</h2>
+    <p>Chargement...</p>
+  </div>
+
 </div>
 {% endblock %}
