@@ -52,6 +52,7 @@
     hx-get="/posts/list"
     hx-trigger="filtersChanged from:body"
     hx-push-url="/posts"
+    hx-indicator="#loading-indicator"
   >
     {% include "pages/posts/_list.njk" %}
   </div>
@@ -62,6 +63,7 @@
     x-show="loading"
     x-transition
     style="display: none;"
+    id="loading-indicator"
   >
     Chargement...
   </div>
@@ -70,63 +72,101 @@
 <script>
 function postsManager(config) {
   return {
-    filters: config.initialFilters,
+    filters: {
+      ...config.initialFilters,
+      page: config.currentPage || 1,  // Garantir une page par défaut
+      limit: config.initialFilters.limit || 10  // Valeur par défaut standard
+    },
     loading: false,
-    debounceTimeout: null,
+    debounceTimer: null,
 
     init() {
-      this.$watch('filters', () => this.handleFiltersChange());
+      // Gérer la synchronisation avec l'URL
+      this.syncFiltersFromURL();
+      
+      // Écouter les changements d'historique
+      window.addEventListener('popstate', this.syncFiltersFromURL.bind(this));
 
-      // Synchronisation avec l'historique du navigateur
-      window.addEventListener('popstate', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        this.filters = Object.fromEntries(urlParams.entries());
-        this.filters.page = urlParams.get('page') || 1;
-        this.handleFiltersChange();
+      // Gestion explicite du chargement avec HTMX
+      document.body.addEventListener('htmx:beforeOnLoad', () => {
+        this.loading = true;
+      });
+
+      document.body.addEventListener('htmx:afterOnLoad', () => {
+        this.loading = false;
+      });
+
+      document.body.addEventListener('htmx:loadError', () => {
+        this.loading = false;
       });
     },
 
-    handleSearchInput() {
-      clearTimeout(this.debounceTimeout);
-      this.debounceTimeout = setTimeout(() => {
-        this.filters.page = 1; // Revenir à la première page sur nouvelle recherche
-        this.handleFiltersChange();
+    syncFiltersFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      // Mapping explicite pour éviter les injections
+      this.filters = {
+        page: parseInt(urlParams.get('page') || '1', 10),
+        limit: parseInt(urlParams.get('limit') || '10', 10),
+        search: urlParams.get('search') || '',
+        sortBy: urlParams.get('sortBy') || 'id',
+        sortOrder: urlParams.get('sortOrder') || 'asc'
+      };
+
+      this.handleFiltersChange(false);  // Sans rechargement forcé
+    },
+
+    handleFiltersChange(shouldReload = true) {
+      clearTimeout(this.debounceTimer);
+      
+      this.debounceTimer = setTimeout(() => {
+        this.loading = true;
+        this.updateURL();
+
+        if (shouldReload) {
+          this.triggerHtmxReload();
+        }
       }, 300);
     },
 
-    handleFiltersChange() {
-      this.loading = true;
-      this.updateURL();
-
-      // Met à jour la requête HTMX
+    triggerHtmxReload() {
       const listContainer = document.getElementById('posts-list');
       if (listContainer) {
-        const targetUrl = new URL('/posts/list', window.location.origin);
-        Object.entries(this.filters).forEach(([key, value]) => {
-          if (value) targetUrl.searchParams.set(key, value);
-        });
-
-        listContainer.setAttribute('hx-get', targetUrl.toString());
+        const targetUrl = this.buildFilteredUrl('/posts/list');
+        listContainer.setAttribute('hx-get', targetUrl);
+        htmx.ajax('GET', targetUrl, listContainer);
       }
+    },
+    
+
+    buildFilteredUrl(baseUrl) {
+      const url = new URL(baseUrl, window.location.origin);
+      
+      // N'ajouter que les filtres non-vides
+      Object.entries(this.filters).forEach(([key, value]) => {
+        if (value && value !== '' && value !== 1) {
+          url.searchParams.set(key, encodeURIComponent(value));
+        }
+      });
+
+      return decodeURIComponent(url.toString())
+    },
+
+    updateURL() {
+      const url = this.buildFilteredUrl('/posts');
+      window.history.pushState({}, '', url);
+    },
+
+    // Méthodes de manipulation des filtres
+    handleSearchInput() {
+      this.filters.page = 1;  // Réinitialiser à la première page
+      this.handleFiltersChange();
     },
 
     toggleSortOrder() {
       this.filters.sortOrder = this.filters.sortOrder === 'asc' ? 'desc' : 'asc';
-    },
-
-    updateURL() {
-  const params = new URLSearchParams();
-  Object.entries(this.filters).forEach(([key, value]) => {
-    // Exclure le paramètre 'page' s'il est présent plusieurs fois
-    if (key === 'page') {
-      params.set(key, value);
-    } else if (value) {
-      params.set(key, value);
+      this.handleFiltersChange();
     }
-  });
-  const newUrl = `${window.location.pathname}?${params.toString()}`;
-  window.history.pushState({}, '', newUrl);
-}
   };
 }
 </script>
