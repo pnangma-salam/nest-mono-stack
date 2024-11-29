@@ -3,7 +3,7 @@ import os
 def tree(dir_path, indent='', ignore_list=None):
     # Default ignore list includes common boilerplate directories
     if ignore_list is None:
-        ignore_list = {'node_modules', '.git', '__pycache__', '.DS_Store', '.husky'}
+        ignore_list = {'node_modules', '.git', '__pycache__', '.DS_Store', '.husky', 'dist', 'build'}
     
     # Get the list of all files and directories in the given directory
     items = [item for item in os.listdir(dir_path) if item not in ignore_list]

@@ -14,10 +14,19 @@ export class ViewService {
     const nunjucksEnv = nunjucks.configure(viewsDir, {
       ...viewConfig.nunjucks,
       express: app.getHttpAdapter().getInstance(),
+      watch: true,
     });
 
     nunjucksEnv.addFilter('json', (str) => JSON.stringify(str, null, 2));
-
+    nunjucksEnv.addFilter('removeParamFromQuery', (filters, paramToRemove) => {
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (key !== paramToRemove && value) {
+          params.set(key, value as unknown as string);
+        }
+      });
+      return params.toString();
+    });
     app.useStaticAssets(viewConfig.publicDir);
     app.setBaseViewsDir(viewsDir);
     app.setViewEngine(viewConfig.engine);

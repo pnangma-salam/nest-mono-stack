@@ -7,7 +7,7 @@
   currentPage: {{ page }},
   totalPages: {{ totalPages }}
 })" class="tw-space-y-6">
-  
+
   {# Filtres #}
   <div class="tw-bg-white tw-shadow-sm tw-rounded-lg tw-p-4">
     <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4">
@@ -51,8 +51,7 @@
     id="posts-list"
     hx-get="/posts/list"
     hx-trigger="filtersChanged from:body"
-    hx-push-url="true"
-    hx-include="[name='filters']"
+    hx-push-url="/posts"
   >
     {% include "pages/posts/_list.njk" %}
   </div>
@@ -77,18 +76,38 @@ function postsManager(config) {
 
     init() {
       this.$watch('filters', () => this.handleFiltersChange());
+
+      // Synchronisation avec l'historique du navigateur
+      window.addEventListener('popstate', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.filters = Object.fromEntries(urlParams.entries());
+        this.filters.page = urlParams.get('page') || 1;
+        this.handleFiltersChange();
+      });
     },
 
-    handleSearchInput(e) {
+    handleSearchInput() {
       clearTimeout(this.debounceTimeout);
       this.debounceTimeout = setTimeout(() => {
+        this.filters.page = 1; // Revenir à la première page sur nouvelle recherche
         this.handleFiltersChange();
       }, 300);
     },
 
     handleFiltersChange() {
+      this.loading = true;
       this.updateURL();
-      this.$dispatch('filtersChanged');
+
+      // Met à jour la requête HTMX
+      const listContainer = document.getElementById('posts-list');
+      if (listContainer) {
+        const targetUrl = new URL('/posts/list', window.location.origin);
+        Object.entries(this.filters).forEach(([key, value]) => {
+          if (value) targetUrl.searchParams.set(key, value);
+        });
+
+        listContainer.setAttribute('hx-get', targetUrl.toString());
+      }
     },
 
     toggleSortOrder() {
@@ -96,14 +115,18 @@ function postsManager(config) {
     },
 
     updateURL() {
-      const params = new URLSearchParams();
-      Object.entries(this.filters).forEach(([key, value]) => {
-        if (value) params.set(key, value);
-      });
-      
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({}, '', newUrl);
+  const params = new URLSearchParams();
+  Object.entries(this.filters).forEach(([key, value]) => {
+    // Exclure le paramètre 'page' s'il est présent plusieurs fois
+    if (key === 'page') {
+      params.set(key, value);
+    } else if (value) {
+      params.set(key, value);
     }
+  });
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.pushState({}, '', newUrl);
+}
   };
 }
 </script>

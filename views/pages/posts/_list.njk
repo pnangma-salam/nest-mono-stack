@@ -14,26 +14,26 @@
     <span>Page {{ page }} sur {{ totalPages }}</span>
     <div class="tw-space-x-2">
       {% if page > 1 %}
-      <button
-        class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
-        hx-get="/posts/list?page={{ page - 1 }}"
-        hx-target="#posts-list"
-        hx-push-url="true"
-      >
-        Précédent
-      </button>
-      {% endif %}
-      
-      {% if page < totalPages %}
-      <button
-        class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
-        hx-get="/posts/list?page={{ page + 1 }}"
-        hx-target="#posts-list"
-        hx-push-url="true"
-      >
-        Suivant
-      </button>
-      {% endif %}
+<button
+  class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
+  hx-get="/posts/list?page={{ page - 1 }}&{{ filters | removeParamFromQuery('page') | urlencode }}"
+  hx-target="#posts-list"
+  hx-push-url="/posts?page={{ page - 1 }}&{{ filters | removeParamFromQuery('page') | urlencode }}"
+>
+  Précédent
+</button>
+{% endif %}
+
+{% if page < totalPages %}
+<button
+  class="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded"
+  hx-get="/posts/list?page={{ page + 1 }}&{{ filters | removeParamFromQuery('page') | urlencode }}"
+  hx-target="#posts-list"
+  hx-push-url="/posts?page={{ page + 1 }}&{{ filters | removeParamFromQuery('page') | urlencode }}"
+>
+  Suivant
+</button>
+{% endif %}
     </div>
   </div>
 </div>
