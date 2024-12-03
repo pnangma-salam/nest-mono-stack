@@ -1,7 +1,7 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ViewService } from './infrastructure/view/view.service';
 
