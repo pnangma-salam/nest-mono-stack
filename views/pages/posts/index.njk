@@ -47,7 +47,7 @@
   </div>
 
   {# Liste des posts #}
-  <div 
+  <div
     id="posts-list"
     hx-get="/posts/list"
     hx-trigger="filtersChanged from:body"
@@ -58,7 +58,7 @@
   </div>
 
   {# Indicateur de chargement #}
-  <div 
+  <div
     class="tw-fixed tw-bottom-4 tw-right-4 tw-bg-black tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
     x-show="loading"
     x-transition
@@ -83,7 +83,7 @@ function postsManager(config) {
     init() {
       // Gérer la synchronisation avec l'URL
       this.syncFiltersFromURL();
-      
+
       // Écouter les changements d'historique
       window.addEventListener('popstate', this.syncFiltersFromURL.bind(this));
 
@@ -103,7 +103,7 @@ function postsManager(config) {
 
     syncFiltersFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
-      
+
       // Mapping explicite pour éviter les injections
       this.filters = {
         page: parseInt(urlParams.get('page') || '1', 10),
@@ -118,7 +118,7 @@ function postsManager(config) {
 
     handleFiltersChange(shouldReload = true) {
       clearTimeout(this.debounceTimer);
-      
+
       this.debounceTimer = setTimeout(() => {
         this.loading = true;
         this.updateURL();
@@ -137,11 +137,11 @@ function postsManager(config) {
         htmx.ajax('GET', targetUrl, listContainer);
       }
     },
-    
+
 
     buildFilteredUrl(baseUrl) {
       const url = new URL(baseUrl, window.location.origin);
-      
+
       // N'ajouter que les filtres non-vides
       Object.entries(this.filters).forEach(([key, value]) => {
         if (value && value !== '' && value !== 1) {
@@ -169,5 +169,14 @@ function postsManager(config) {
     }
   };
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  const loadingIndicator = document.getElementById('loading-indicator');
+  if (loadingIndicator) {
+    console.log('⚔️⚔️⚔️⚔️⚔️');
+
+    loadingIndicator.style.display = 'none';
+  }
+});
 </script>
 {% endblock %}
