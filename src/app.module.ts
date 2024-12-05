@@ -6,6 +6,7 @@ import { HomeModule } from './features/home/home.module';
 import { PostsModule } from './features/posts/posts.module';
 import { FormModule } from './form/form.module';
 import { ViewService } from './infrastructure/view/view.service';
+import { ProcessModule } from './process/process.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ViewService } from './infrastructure/view/view.service';
     HomeModule,
     PostsModule,
     FormModule,
+    ProcessModule,
   ],
   providers: [ViewService],
 })
